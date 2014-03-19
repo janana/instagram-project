@@ -1,0 +1,50 @@
+img.media-object {
+    width: 32px;
+    height: 32px;
+}
+
+li.media {
+    background: #EEE;
+    border: 1px solid #DDD;
+    padding: 5px;
+    margin: 5px 0;
+}
+
+ul.media-list {
+    margin-top: 5px;
+}
+
+img.image-responsive {
+    margin-bottom: 5px;
+}
+.time-badge {
+	float: right;
+}
+#container {
+	width: 640px;
+}
+.btn {
+	margin: 10px 0;
+
+}
+.comment-button {
+   float: right;
+   margin-top: -34px;
+}
+.comment-control {
+    width: 80%;
+}
+#account-box {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #DDD;
+    background: #EEE;
+    overflow: auto;
+}
+.account-info-box {
+    float: right;
+    width: 50%;
+}
+#accounts-div {
+    margin-top: 50px;
+}

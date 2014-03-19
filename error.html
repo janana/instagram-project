@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Instagram</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Expires" content="-1">
+        <!-- style tags start here -->
+        <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/style.css">
+        <!-- style tags end here -->
+    </head>
+    <body>
+        <input type="hidden" id="antiForgeryToken" value="<?php echo $_SESSION['antiForgeryToken']; ?>"/>
+        <div id="container" class="container"> <!-- container div begin-->
+            <h1>Something went wrong!</h1>
+            <p>The request was denied, please try again.</p>
+            <a href="index.php">Back</a>
+        </div> <!-- container div end -->
+
+        <!-- script tags start here -->
+        <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
+        <script type="text/javascript" src="js/jquery.livequery.js"></script>
+        <script type="text/javascript" src="js/instagram.js"></script>
+
+    </body>
+</html>
