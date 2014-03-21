@@ -1,8 +1,6 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-require_once("instagramfactory.php");
-require_once("DAL/db.php");
+require_once("Instagram/instagramfactory.php");
+require_once("DAL/DataHandler.php");
 session_start();
 
 if (!isset($_GET['error']) && isset($_GET['code'])) {
@@ -12,9 +10,9 @@ if (!isset($_GET['error']) && isset($_GET['code'])) {
 	$accessData = $instagram->getAccessData($code);
 	$_SESSION['ACCESSDATA'] = serialize($accessData);
 
-	$db = new db($instagram);
-	$accountID = $db->saveAccount($_SESSION["userID"]);
-	$db->savePosts($accountID);
+	$dataHandler = new DataHandler($instagram);
+	$accountID = $dataHandler->saveAccount($_SESSION["userID"]);
+	$dataHandler->savePosts($accountID);
 
 	if(isset($_SESSION['ACCESSDATA'])) header('Location: demo.php');
 } else {

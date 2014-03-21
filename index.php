@@ -3,9 +3,8 @@
 require_once("DAL/DAL.php");
 require_once("DAL/UserDAL.php");
 require_once("HTMLBuilder.php");
-session_start();
-error_reporting(E_ALL);
 
+session_start();
 
 if (isset($_POST["name"])) {
 	$name = $_POST["name"];
@@ -49,52 +48,3 @@ if (isset($_POST["name"])) {
 	// Display login page
 	HTML::displayHTMLPage(HTML::getFormHTML(false));
 }
-
-/*
-
-$accountDAL = new AccountDAL();
-$accounts = $accountDAL->getUserAccounts(1);
-$accountDAL->close();
-
-$html = "";
-if (!empty($accounts)) {
-	$account = $accounts[1];
-	// AccessData to send to Instagram-class in the same format as sent from Instagrams API (without some excess information on the user)
-	$accessData = (object) array("access_token" => $account->AccessToken,
-									"user" => (object) array("username" => $account->Username,
-															"profile_picture" => $account->ProfilePicURL,
-															"id" => $account->InstagramAccountID));
-	$instagram = InstagramFactory::Create();
-	$instagram->setAccessData($accessData);
-	$db = new db($instagram);
-	$posts = $db->getPosts($account->AccountID); // From database
-	$icb = new InstagramContentBuilder($account->Username);
-	echo $icb->createEntries($posts);
-	/*foreach ($accounts as $account) {
-		$accessData = (object) array("access_token" => $account->AccessToken,
-									"user" => (object) array("username" => $account->Username,
-															"profile_picture" => $account->ProfilePicURL,
-															"id" => $account->InstagramAccountID));
-		var_dump($accessData);
-		$html .= "<div data-account-id='{$account->InstagramAccountID}'>
-					
-				</div>";
-	}
-} else {
-	// Inits a class with the correct settings, IDs and secret values
-	$instagram = InstagramFactory::create();
-	$html = "<a href='". $instagram->getOAuthURI() ."'>Login with Instagram</a>";
-	
-}
-echo $html;*/
-
-
-
-// object(stdClass)#2 (2) { 
-//	 ["access_token"]=> string(50) "202332745.0a05b73.a1f1de23ae4f48fabcf87ceb0acdcacc" 
-//	 ["user"]=> object(stdClass)#3 (6) { 
-//	 		["username"]=> string(8) "jbananiz" 
-//	 		["profile_picture"]=> string(77) "http://images.ak.instagram.com/profiles/profile_202332745_75sq_1366827264.jpg" 
-//	 		["id"]=> string(9) "202332745" 
-//   }
-// }

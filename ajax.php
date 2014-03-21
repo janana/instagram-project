@@ -1,13 +1,10 @@
 <?php
 
 require_once("Instagram/instagramfactory.php");
-require_once("DAL/db.php");
 require_once("Instagram/instagramcontentbuilder.php");
+require_once("DAL/DataHandler.php");
 
 session_start();
-
-ini_set('display_errors',1);
-error_reporting(E_ALL);
 
 $instagram = InstagramFactory::create();
 
@@ -17,9 +14,9 @@ if ($_POST["function"] == "getContent") {
 
 	$accountID = $_POST["accountID"]; // AccountID from database 
 
-	$db = new db($instagram);
+	$dataHandler = new DataHandler($instagram);
 
-	$posts = $db->getPosts($accountID); 
+	$posts = $dataHandler->getPosts($accountID); 
 	
 	$icb = new InstagramContentBuilder($instagram->getUserName());
 	echo $icb->createEntries($posts); 
@@ -28,8 +25,8 @@ if ($_POST["function"] == "getContent") {
 	$accessData = $_SESSION['ACCESSDATA'];
 	$instagram->setAccessData($accessData);
 
-	$db = new db($instagram);
-	$info = $db->getAccountInfo();
+	$dataHandler = new DataHandler($instagram);
+	$info = $dataHandler->getAccountInfo();
 	echo InstagramContentBuilder::createAccountInfoBox($info);
 
 } else if ($_POST["function"] == "getAccounts") {
@@ -70,9 +67,9 @@ if ($_POST["function"] == "getContent") {
 		if ($_POST["function"] == "updateLike") {
 			$data = "";
 			if ($_POST["like"] == 1) {
-				$data = $instagram->likeMedia($postID); // InstagramPostID - not from database
+				$data = $instagram->likePost($postID); // InstagramPostID - not from database
 			} else {
-				$data = $instagram->unlikeMedia($postID); // InstagramPostID - not from database
+				$data = $instagram->unlikePost($postID); // InstagramPostID - not from database
 			}
 			
 			if ($data->meta->code == 200) {
@@ -89,10 +86,10 @@ if ($_POST["function"] == "getContent") {
 			$text = $_POST["text"];
 
 			// Try to comment post on Instagram
-			//$data = $instagram->commentMedia($postID, $text); // InstagramPostID - not from database
+			$data = $instagram->commentPost($postID, $text); // InstagramPostID - not from database
 			
-			//if ($data->meta->code == 200) { // The commenting was successful, check the post from Instagram if comment has been commented
-				$post = $instagram->getMedia($postID);
+			if ($data->meta->code == 200) { // The commenting was successful, check the post from Instagram if comment has been commented
+				$post = $instagram->getPost($postID);
 				if ($post->meta->code == 200) { // The post was loaded successfully
 					$comments = $post->data->comments->data;
 					$comment = "";
@@ -116,15 +113,13 @@ if ($_POST["function"] == "getContent") {
 					} else { // The comment did not exist on the post on Instagram
 						echo "Error";
 					}
-					
-					
 				}
-			/*} else { // Could not comment the post on Instagram
+			} else { // Could not comment the post on Instagram
 				echo "Error";
-			}*/
+			}
 		} else if ($_POST["function"] == "deleteComment") {
 			$instagramCommentID = $_POST["commentID"];
-			$data = $instagram->deleteMediaComment($postID, $instagramCommentID);
+			$data = $instagram->deletePostComment($postID, $instagramCommentID);
 			if ($data->meta->code == 200) {
 				// Delete succeeded - delete in database
 				$commentDAL = new CommentDAL();

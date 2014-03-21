@@ -21,20 +21,18 @@
 <body>
     <input type="hidden" id="userID" value="<?php echo $_SESSION['UserID']; ?>" />
     <input type="hidden" id="antiForgeryToken" value="<?php echo $_SESSION['antiForgeryToken']; ?>"/>
-    <div id="container" class="container"> <!-- container div begin-->
+    <div id="container" class="container">
         <input type='button' class='btn hide' id='account-info' value='Account information' />
-        <div id='account-box' class='hide'></div>
-        <div id='accounts-div'></div>
-        <div id="form_row" class="row">
-            <div id="entry-box" class="col-md-12">
-                <!-- All the posts are gonna be displayed here -->
-            </div>
-
-        </div> <!-- div row end -->
-
-
-    </div> <!-- container div end -->
-
+        <div id='account-box' class='hide'>
+            <!-- Here is the account information going to be displayed when the user pushes the account-info-button above -->
+        </div>
+        <div id='accounts-div'>
+            <!-- All the accounts associated with the user are going to be displayed here as a pic and username -->
+        </div>
+        <div id="entry-box">
+            <!-- All the posts are gonna be displayed here -->
+        </div>
+    </div> 
     <!-- script tags start here -->
     <script type="text/javascript" src="js/jquery-1.7.min.js"></script>
     <script type="text/javascript" src="js/jquery.livequery.js"></script>

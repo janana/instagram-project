@@ -1,6 +1,6 @@
 $(document).ready(function(){
     var userID = $("#userID").val(); // UserID from database
-    // Put the accountID from database in URL and if it is set , getContent (and the UserID matches the one saved in database)
+    
     var accountID = getQueryString();
     if (accountID != "") {
         showAccount(accountID);
@@ -60,6 +60,12 @@ $(document).ready(function(){
     }
 });
 
+
+/**
+ * Displays the posts associated to the accountID that are saved in the database
+ * Inits all the buttons for liking/unliking/commenting...
+ * @param  {int} accountID from database
+ */
 function showAccount(accountID) {
     // Display the accounts posts and information
     $("#container").prepend("<input type='button' id='back-button' value='Back' class='btn btn-primary' />");
@@ -123,6 +129,7 @@ function showAccount(accountID) {
 
 /**
  * Ajax function for getting the HTML of the Instagram posts
+ * displays the HTML in the div with id='entry-box'
  * @param  {int} userID ID from database
  */
 function getContent(accountID) {
@@ -133,6 +140,7 @@ function getContent(accountID) {
     }).success(function (data) {
         $("#entry-box").empty();
         $("#entry-box").append(data);
+        setQueryString("account="+accountID);
     });
 }
 
@@ -148,7 +156,6 @@ function updateLike(postID, like){
         url: "ajax.php",
         data: { "function": "updateLike", "postID": postID, "like": like, "antiForgeryToken": antiForgeryToken }
     }).success(function(data) {
-        console.log(data);
         if (data != "Error") {
             if (like == 1) {
                 hideLikeButton(postID);
@@ -174,15 +181,10 @@ function commentPost(postID, commentText) {
         url: "ajax.php",
         data: { "function": "commentPost", "postID": postID, "text": commentText, "antiForgeryToken": antiForgeryToken }
     }).success(function(data) { // Waiting for Instagram to approve access for this to work
-        console.log(data);
-        try {
-            if (data != "Error") {
-                $(".media-list[data-media-id='"+postID+"']").append(data);
-            } else {
-                console.log("Could not comment post in Instagram");
-            }
-        } catch (e) {
-            console.log(e);
+        if (data != "Error") {
+            $(".media-list[data-media-id='"+postID+"']").append(data);
+        } else {
+            alert("Could not comment post in Instagram");
         }
     });
 }
@@ -206,17 +208,28 @@ function deleteComment(postID, commentID) {
     });
 }
 
-
+/**
+ * Returns the URL query string if it is set
+ * @return {string} the query string from the URL
+ */
 function getQueryString() {
     var query = window.location.search;
     query = query.match(/\?(.)*/);
     if (query != null) {
         query = query[0].replace("?", "");
-        if (/accountID/.test(query)) {
-            return query.replace("accountID=", "");
+        if (/account/.test(query)) {
+            return query.replace("account=", "");
         }
     }
     return "";
+}
+/**
+ * Sets the URL query string
+ * @param {string} query    the string to set in URL as query
+ */
+function setQueryString(query) {
+    var url = "?"+query;
+    history.pushState("", "Instagram", url); // Session/cookie data | Page title to display in history | URL
 }
 
 //Show the like button on the page
