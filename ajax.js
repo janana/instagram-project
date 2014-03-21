@@ -177,12 +177,7 @@ function commentPost(postID, commentText) {
         console.log(data);
         try {
             if (data != "Error") {
-                var json = JSON.parse(data);
-                if (json.state == 1) {
-                    $(".media-list[data-media-id='"+postID+"']").append(json.HTML);
-                } else if (json.state == "all") {
-                    $(".media-list[data-media-id='"+postID+"']").empty().append(json.HTML);
-                }
+                $(".media-list[data-media-id='"+postID+"']").append(data);
             } else {
                 console.log("Could not comment post in Instagram");
             }

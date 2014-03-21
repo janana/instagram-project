@@ -85,9 +85,10 @@ class db {
 		$posts = $postDAL->getPosts($accountID);
 		$commentDAL = new CommentDAL();
 		foreach ($posts as $post) {
-			$post->Comments = $commentDAL->getComments($post->PostID);
+			$comments = $commentDAL->getComments($post->PostID);
+			$post->Comments = $this->sortByDate($comments, "newestLast"); // order the comments by created date
 		}
-		$posts = $this->sortByDate($posts);
+		$posts = $this->sortByDate($posts, "newestFirst"); // order the posts by created date
 		return $posts;
 	}
 
@@ -157,20 +158,27 @@ class db {
 		$commentDAL->close();
 		return $returnComments;
 	}
-	private function compare($a, $b) {
+	private function newestFirst($a, $b) {
 		if ($a->CreatedTime == $b->CreatedTime) {
 			return 0;
 		}
 
 		return ($a->CreatedTime < $b->CreatedTime) ? 1 : -1;
 	}
+	private function newestLast($a, $b) {
+		if ($a->CreatedTime == $b->CreatedTime) {
+			return 0;
+		}
+
+		return ($a->CreatedTime < $b->CreatedTime) ? -1 : 1;
+	}
 	/**
 	 * Sorts an array with objects that have a CreatedTime value
 	 * @param  array $array Post or Comment
 	 * @return array        Sorted copy of in param
 	 */
-	private function sortByDate($array) {
-		usort($array, array($this, "compare"));
+	private function sortByDate($array, $functionName) {
+		usort($array, array($this, $functionName));
 		return $array;
 	}
 	

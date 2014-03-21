@@ -89,15 +89,21 @@ if ($_POST["function"] == "getContent") {
 			$text = $_POST["text"];
 
 			// Try to comment post on Instagram
-			$data = $instagram->commentMedia($postID, $text); // InstagramPostID - not from database
+			//$data = $instagram->commentMedia($postID, $text); // InstagramPostID - not from database
 			
-			if ($data->meta->code == 200) { // The commenting was successful, check the post from Instagram if comment has been commented
+			//if ($data->meta->code == 200) { // The commenting was successful, check the post from Instagram if comment has been commented
 				$post = $instagram->getMedia($postID);
 				if ($post->meta->code == 200) { // The post was loaded successfully
 					$comments = $post->data->comments->data;
-					if ($comments[count($comments)-1]->text == $text) { // The comment is found
+					$comment = "";
+					foreach ($comments as $c) {
+						if ($c->text == $text && $c->from->username == $instagram->getUserName()) {
+							$comment = $c;
+							break;
+						}
+					}
+					if ($comment != "") {
 						// Save comment in database
-						$comment = $comments[count($comments)-1];
 						$c = new Comment($comment->id, $postID, 0, $comment->text, $comment->created_time, $instagram->getUserName(), $instagram->getUserProfilePicture());
 						
 						$commentDAL = new CommentDAL();
@@ -106,40 +112,16 @@ if ($_POST["function"] == "getContent") {
 
 						// Get the HTML-boxes for the new comment
 						$html = InstagramContentBuilder::createCommentBox($c, $postID);
-
-						// Return a json string with state set that only one comment are being sent with it
-						$return = array("state" => 1, "HTML" => $html);
-						echo json_encode($return);
-					} else {
-						// Get all the comments on the post
-						$postDAL = new PostDAL();
-						$IDs = $postDAL->getPostIDs($postID); // Get database IDs from Post for foreign keys on comment
-						if ($IDs != "") {
-							$accountID = $IDs->AccountID;
-							$dbPostID = $IDs->PostID;
-							$postDAL->close();
-
-							// Save the comments in database if they don't already exist
-							$db = new db($instagram);
-							$returnComments = $db->saveComments($post->data, $dbPostID, $accountID);
-
-							// Get the HTML-boxes for the Comments
-							$html = "";
-							foreach ($returnComments as $comment) {
-								$html .= InstagramContentBuilder::createCommentBox($comment, $postID);
-							}
-							
-							// Return a json string with state set that all comments are being sent with it
-							$return = array("state" => "all", "HTML" => $html);
-							echo json_encode($return);
-						} else {
-							echo "Error";
-						}
+						echo $html;
+					} else { // The comment did not exist on the post on Instagram
+						echo "Error";
 					}
+					
+					
 				}
-			} else { // Could not comment the post on Instagram
+			/*} else { // Could not comment the post on Instagram
 				echo "Error";
-			}
+			}*/
 		} else if ($_POST["function"] == "deleteComment") {
 			$instagramCommentID = $_POST["commentID"];
 			$data = $instagram->deleteMediaComment($postID, $instagramCommentID);
