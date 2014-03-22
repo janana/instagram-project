@@ -203,9 +203,9 @@ class InstagramContentBuilder{
         if ($accountInfo->bio != "") {
             $html .= "<p>".$accountInfo->bio."</p>";
         }
-        $html .= "<p>Posts: <span>".$accountInfo->postCount."</span></p>";
-        $html .= "<p>Followers: <span>".$accountInfo->followedBy."</span></p>";
-        $html .= "<p>Follows: <span>".$accountInfo->follows."</span></p>";
+        $html .= "<p>Posts: <span class='pull-right'>".$accountInfo->postCount."</span></p>";
+        $html .= "<p>Followers: <span class='pull-right'>".$accountInfo->followedBy."</span></p>";
+        $html .= "<p>Follows: <span class='pull-right'>".$accountInfo->follows."</span></p>";
 
         $html .= "</div>";
         return $html;

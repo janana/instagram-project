@@ -26,8 +26,16 @@ class CommentDAL extends DAL {
         $this->doQuery($sql, false);
     }
 
+    /**
+     * Adds a comment in the database associated with the current account
+     * @param string    $instagramPostID    ID from instagram
+     * @param string    $instagramCommentID ID from instagram
+     * @param string    $text               comment text
+     * @param datetime  $createdTime        time the comment was created
+     * @param string    $username           the account username
+     * @param string    $profilePicURL      the accounts profile pic url
+     */
     public function addSelfComment($instagramPostID, $instagramCommentID, $text, $createdTime, $username, $profilePicURL) {
-        
         $instagramPostID = SQLFunctions::SQLText($instagramPostID);
         $instagramCommentID = SQLFunctions::SQLText($instagramCommentID);
         $text = SQLFunctions::SQLText($text);

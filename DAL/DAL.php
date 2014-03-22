@@ -46,6 +46,10 @@ class DAL {
 		}
 		
 	}
+
+	/**
+	 * Closes the connection to the database
+	 */
 	public function close() {
 		mysql_close($this->connection);
 	}

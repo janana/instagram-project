@@ -7,7 +7,7 @@ require_once("DAL/AccountDAL.php");
 require_once("Objects/Post.php");
 require_once("Objects/Comment.php");
 
-class db {
+class DataHandler {
 	/**
 	 * @var Instagram class
 	 */
@@ -31,7 +31,7 @@ class db {
 		$profilePic = $this->instagram->getUserProfilePicture();
 		$username = $this->instagram->getUserName();
 		
-		// Save in db
+		// Save in DataHandler
 		$accountDAL = new AccountDAL();
 		$accountID = $accountDAL->addAccount($userID, $instaID, $accessToken, $profilePic, $username);
 		$accountDAL->close();
@@ -40,7 +40,7 @@ class db {
 	}
 
 	/**
-	 * Updates the accessToken from Instagram in database via the ID from instagram
+	 * Updates the accessToken from Instagram in the database via the ID from instagram
 	 */
 	public function updateAccessToken() {
 		$instagramAccountID = $this->instagram->getUserID();
@@ -51,7 +51,10 @@ class db {
 		$accountDAL->close();
 	}
 
-
+	/**
+	 * Returns the user information from Instagram
+	 * @return stdClass object 
+	 */
 	public function getAccountInfo() {
 		$data = $this->instagram->getUserInfo();
 		$data = $data->data;
@@ -98,7 +101,7 @@ class db {
 	 * @return array of Post objects
 	 */
 	public function savePosts($accountID) {
-		$data = $this->instagram->getUserMedia();
+		$data = $this->instagram->getUserPosts();
 		$posts = $data->data;
 		$returnPosts = array();
 		
@@ -121,8 +124,6 @@ class db {
 			$postDAL = new PostDAL();
 			$newPostID = $postDAL->addPost($accountID, $postID, $p->CreatedTime, $text, $url, $likes, $userHasLiked);
 			$postDAL->close();
-			
-			$p->addID($newPostID);
 			
 			$comments = $this->saveComments($post, $newPostID, $accountID); 
 			$p->addComments($comments);
@@ -158,6 +159,13 @@ class db {
 		$commentDAL->close();
 		return $returnComments;
 	}
+
+	/**
+	 * Function to use with php's usort-function for sorting
+	 * @param   $a 		   one value
+	 * @param   $b 		   another value
+	 * @return  tinyint    -1, 0 or 1
+	 */
 	private function newestFirst($a, $b) {
 		if ($a->CreatedTime == $b->CreatedTime) {
 			return 0;
@@ -165,6 +173,13 @@ class db {
 
 		return ($a->CreatedTime < $b->CreatedTime) ? 1 : -1;
 	}
+
+	/**
+	 * Function to use with php's usort-function for sorting
+	 * @param   $a 		   one value
+	 * @param   $b 		   another value
+	 * @return  tinyint    -1, 0 or 1
+	 */
 	private function newestLast($a, $b) {
 		if ($a->CreatedTime == $b->CreatedTime) {
 			return 0;
@@ -172,6 +187,7 @@ class db {
 
 		return ($a->CreatedTime < $b->CreatedTime) ? -1 : 1;
 	}
+	
 	/**
 	 * Sorts an array with objects that have a CreatedTime value
 	 * @param  array $array Post or Comment

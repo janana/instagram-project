@@ -192,58 +192,58 @@ class Instagram {
     }
 
     /**
-     * Like a media 
-     * @param  mixed $id The media's id
+     * Like a post 
+     * @param  mixed $id The post's id
      * @return mixed JSON-decoded data (stdClass)
      */
-    public function likeMedia($id) {
+    public function likePost($id) {
         return $this->makeCall('media/' . $id . '/likes', true, null, 'POST');
     }
 
     /**
-     * Unlike a media
-     * @param  mixed $id A media id to unlike
+     * Unlike a post
+     * @param  mixed $id A post id to unlike
      * @return mixed JSON-decoded data (stdClass)
      */
-    public function unlikeMedia($id) {
+    public function unlikePost($id) {
         return $this->makeCall('media/' . $id . '/likes', true, null, 'DELETE');
     }
 
     /**
-     * Comment a media on instagram
-     * @param  mixed $id The media's id
+     * Comment a post on instagram
+     * @param  mixed $id The post's id
      * @param  string $text The comment text
      * @return mixed JSON-decoded data (stdClass)
      */
-    public function commentMedia($id, $text) {
+    public function commentPost($id, $text) {
         return $this->makeCall('media/' . $id . '/comments', true, array('text' => $text), 'POST');
     }
 
     /**
-     * Gets the media's comments
-     * @param $id The media's id
+     * Gets the post's comments
+     * @param $id The post's id
      * @return mixed JSON-decoded data (stdClass)
      */
-    public function getMediaComments($id) {
+    public function getPostComments($id) {
         return $this->makeCall('media/' . $id . '/comments', false);
     }
 
     /**
-     * Get media by id
-     * @param $id Media ID
+     * Get post by id
+     * @param $id post ID
      * @return mixed JSON-decoded data (stdClass)
      */
-    public function getMedia($id) {
+    public function getPost($id) {
         return $this->makeCall('media/' . $id);
     }
 
     /**
-     * Delete a media comment
-     * @param $id The media's id
+     * Delete a post's comment
+     * @param $id The post's id
      * @param $commentID The comment's id
      * @return mixed JSON-decoded data (stdClass)
      */
-    public function deleteMediaComment($id, $commentID) {
+    public function deletePostComment($id, $commentID) {
         $this->throwExceptionWhenAccessTokenIsEmpty();
 
         return $this->makeCall('media/' . $id . '/comments/' . $commentID, true, null, 'DELETE');
@@ -300,12 +300,12 @@ class Instagram {
     }
 
     /**
-     * Gets the user's recent media on Instagram
+     * Gets the user's recent post on Instagram
      * @param  string  $id      The user id
      * @param  integer $limit   0 = 20 latest posts. -1 = all posts
      * @return mixed JSON-decoded data (stdClass)
      */
-    public function getUserMedia($id = 'self', $limit = 0) {
+    public function getUserPosts($id = 'self', $limit = 0) {
         return $this->makeCall('users/' . $id . '/media/recent', true, array('count' => $limit));
     }
 
