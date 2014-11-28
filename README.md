@@ -1,4 +1,5 @@
-instagram-project
+Instagram-project
 =================
 
-Project about creating Instagram functionality for Relation desk
+Project about creating Instagram functionality for Relation Desk
+Made with HTML, CSS, MySQL, JavaScript & PHP
